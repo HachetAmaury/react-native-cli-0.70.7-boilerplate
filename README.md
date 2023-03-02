@@ -19,20 +19,22 @@ Let's say your project name is My Awesome App
 ### a. Rename the project with [react-native-rename](https://www.npmjs.com/package/react-native-rename)
 
 ```bash
-npx react-native-rename "My Awesome App"
+npx react-native-rename "My Awesome App" -b "com.myawesomeapp"
 ```
 
-### b. Rename the occurences of ReactNativeCliBoilerplate in the project
+### b. Edit /android/app/src/androidTest/java/com/travelapp/DetoxTest.java
 
 ```bash
-Rename all ReactNativeCliBoilerplate to MyAwesomeApp
+package com.reactnativecliboilerplate; => package com.myawesomeapp;
 ```
+
+### c. Edit .detoxrc.js
 
 ```bash
-Rename all reactnativecliboilerplate to myawesomeapp
+ReactNativeCliBoilerplate => MyAwesomeApp
 ```
 
-### c. Reinstall pods
+### d. Reinstall pods
 
 ```bash
 npx pod-install
