@@ -6,16 +6,20 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios --simulator=\"iPhone 13\"",
     "start": "react-native start",
-    "test": "jest",
     "lint": "eslint .",
     "storybook": "start-storybook -p 7007",
     "build-storybook": "build-storybook",
-    "prestorybook": "rnstl"
+    "prestorybook": "rnstl",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "config": {
     "react-native-storybook-loader": {
-      "searchDir": ["./src/components"], 
-     "pattern": "**/*.stories.tsx", 
+      "searchDir": [
+        "./src/components"
+      ],
+      "pattern": "**/*.stories.tsx",
       "outputFile": "./storybook/storyLoader.js"
     }
   },
@@ -36,6 +40,9 @@
     "@storybook/addon-ondevice-knobs": "^5.3.26",
     "@storybook/react-native": "^5.3.27",
     "@storybook/react-native-server": "^5.3.23",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-native": "^5.4.2",
+    "@testing-library/react-native": "^12.0.0-rc.1",
     "@tsconfig/react-native": "^2.0.3",
     "@types/jest": "^29.4.0",
     "@types/react": "^18.0.28",

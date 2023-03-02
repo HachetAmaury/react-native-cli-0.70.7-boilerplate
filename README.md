@@ -318,3 +318,35 @@ yarn prestorybook
 When storybook is lauched on ios and/or android you can see the storybook UI on your browser at http://localhost:7007.
 This UI is very useful to see all the stories and to test them.
 Each change you make in the UI will be reflected in both app, selecting a story, changing some props...
+
+## 4. React Native Testing Library
+
+
+## Troubelshooting
+
+Error :
+
+```bash
+/usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1452:in `rescue in block in activate_dependencies': Could not find 'rexml' (>= 0) among 115 total gem(s) (Gem::MissingSpecError)
+Checked in 'GEM_PATH=/Users/amaury/.rvm/gems/ruby-2.7.5:/Users/amaury/.rvm/rubies/ruby-2.7.5/lib/ruby/gems/2.7.0:/usr/local/Cellar/cocoapods/1.12.0/libexec' at: /usr/local/Cellar/cocoapods/1.12.0/libexec/specifications/CFPropertyList-3.0.6.gemspec, execute `gem env` for more information
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1449:in `block in activate_dependencies'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1438:in `each'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1438:in `activate_dependencies'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1420:in `activate'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1456:in `block in activate_dependencies'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1438:in `each'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1438:in `activate_dependencies'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1420:in `activate'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1456:in `block in activate_dependencies'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1438:in `each'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1438:in `activate_dependencies'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems/specification.rb:1420:in `activate'
+        from /usr/local/Cellar/ruby/3.2.1/lib/ruby/3.2.0/rubygems.rb:284:in `block in activate_bin_path'
+```
+
+ruby installed with rvm & cocoapods install with homebrew might be the problem
+Homebrew is not able to find the ruby version installed with rvm
+
+brew uninstall --force cocoapods
+brew uninstall --force ruby
+gem install cocoapods
