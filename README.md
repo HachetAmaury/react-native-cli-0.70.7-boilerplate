@@ -1,3 +1,106 @@
+A boilerplate for react-native-cli projects.
+
+# Get it running
+
+## 1. Clone the repo
+
+```bash
+ git clone https://github.com/HachetAmaury/react-native-cli-0.70.7-boilerplate.git <your-project-name>
+```
+
+```bash
+cd <your-project-name>
+```
+
+## 2. Rename the project
+
+Let's say your project name is My Awesome App
+
+### a. Rename the project with [react-native-rename](https://www.npmjs.com/package/react-native-rename)
+
+```bash
+npx react-native-rename "My Awesome App"
+```
+
+### b. Rename the occurences of ReactNativeCliBoilerplate in the project
+
+```bash
+Rename all ReactNativeCliBoilerplate to MyAwesomeApp
+```
+
+```bash
+Rename all reactnativecliboilerplate to myawesomeapp
+```
+
+### c. Reinstall pods
+
+```bash
+npx pod-install
+
+watchman watch-del-all
+```
+
+## 3. Install dependencies
+
+```bash
+yarn install
+```
+
+## 4. Install ios dependencies
+
+```bash
+cd ios
+bundle install
+pod install
+```
+
+# To develop a new component
+
+## 1. Create a new folder in src/components
+
+## 2. Create a new file with the name of your component
+
+## 3. Create a new file with the name of your component + .stories.tsx
+
+## 4. Run the storybook server
+
+```bash
+yarn storybook
+```
+
+## 5. Run the app on ios or android
+
+Make sure that storybook is added inside the app
+
+```js
+// index.js
+
+let RegisteredApp = App;
+RegisteredApp = __DEV__ ? require('./storybook').default : App;
+```
+
+Then run the app
+
+```bash
+yarn ios
+```
+
+```bash
+yarn android
+```
+
+Browse to http://localhost:7007 to see your component in the app
+
+## 5. Create a new file with the name of your component + .test.tsx
+
+## 6. Run the tests
+
+```bash
+yarn test:watch
+```
+
+Start developping your component in TDD testing the component with jest and storybook without having to run the app.
+
 # Detailed installation process
 
 ## Getting Started
