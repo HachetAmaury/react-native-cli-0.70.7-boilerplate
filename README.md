@@ -329,7 +329,7 @@ Each change you make in the UI will be reflected in both app, selecting a story,
 
 ## 4. React Native Testing Library
 
-## Install
+### Install
 
 ```bash
 yarn add -D @testing-library/react-native @testing-library/jest-native @testing-library/jest-dom
@@ -382,7 +382,7 @@ Edit package.json
 }
 ```
 
-## Create a test
+### Create a test
 
 Create a file Button.tests.tsx in ./src/components/\_\_tests\_\_/ directory
 
@@ -481,10 +481,309 @@ describe('<Button />', () => {
 });
 ```
 
-## Run tests
+### Run tests
 
 ```bash
 yarn test:watch
+```
+
+## 5. Detox E2E tests
+
+Following the official [Detox](https://wix.github.io/Detox/docs/introduction/getting-started/) doc :
+
+### Global install
+
+```bash
+yarn global add detox-cli
+```
+
+For mac users :
+
+```bash
+brew tap wix/brew
+brew install applesimutils
+```
+
+### Install Detox in project
+
+```bash
+yarn add detox jest-circus -D
+```
+
+### Jest 29
+
+```bash
+yarn add "jest@^29" --dev
+```
+
+### Init detox
+
+```bash
+detox init
+```
+
+Thiw will create three files :
+
+```bash
+Created a file at path: .detoxrc.js
+Created a file at path: e2e/jest.config.js
+Created a file at path: e2e/starter.test.js
+```
+
+### Configure detox
+
+Following the official [Detox](https://wix.github.io/Detox/docs/introduction/project-setup) doc :
+
+Edit .detoxrc.js
+
+#### 1. Change every occurence of "YOUR_APP" with the name of your app
+
+To find the name of your app open package.json and look for "name" key /!\ the name must be the same in package.json and in xcode and IS CASE SENSITIVE
+
+```js
+(...)
+  apps: {
+    'ios.debug': {
+      type: 'ios.app',
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/YOUR_APP.app', // change this line 1x
+      build: 'xcodebuild -workspace ios/YOUR_APP.xcworkspace -scheme YOUR_APP -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build' // change this line 2x
+    },
+    'ios.release': {
+      type: 'ios.app',
+      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/YOUR_APP.app', // change this line 1x
+      build: 'xcodebuild -workspace ios/YOUR_APP.xcworkspace -scheme YOUR_APP -configuration Release -sdk iphonesimulator -derivedDataPath ios/build' // change this line 2x
+    },
+  (...)
+```
+
+#### 2. Change the device configs
+
+By default Detox select an ios and an android emulator, replace with the one you prefer.
+
+To find the available ios devices run :
+
+```bash
+xcrun simctl list devicetypes
+```
+
+To find the available android devices run :
+
+```bash
+emulator -list-avds
+```
+
+Once you get the names of your prefered ios and android emulator devices, replace the following lines in .detoxrc.js :
+
+```js
+ // ...
+  devices: {
+    simulator: {
+      type: 'ios.simulator',
+      device: {
+        type: 'iPhone 12', // change this line
+      },
+    },
+    attached: {
+      type: 'android.attached',
+      device: {
+        adbName: '.*', // any attached device
+      },
+    },
+    emulator: {
+      type: 'android.emulator',
+      device: {
+        avdName: 'Pixel_3a_API_30_x86', // Change this line
+      },
+    },
+  },
+```
+
+#### 3. Additionnal config for android
+
+These are the files you need to create or edit :
+
+- Build scripts:
+
+```bash
+  - android/build.gradle
+  - android/app/build.gradle
+```
+
+- Native test code:
+
+```bash
+  - android/app/src/main/java/com/<your.package>/MainApplication.java
+```
+
+- Manifests:
+
+```bash
+  - android/app/src/main/AndroidManifest.xml
+  - android/app/src/main/res/xml/network_security_config.xml
+```
+
+##### Build scripts
+
+Edit android/build.gradle
+
+```gradle
+buildscript {
+  ext {
+    (...)
+    minSdkVersion = 21 // Must be 18 or higher
+    (...)
+    kotlinVersion = 'X.Y.Z' // Add this line and replace with the version you want to use ( see next step )
+  }
+  dependencies {
+    (...)
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion") // Add this line
+  }
+  allprojects {
+    repositories {
+    (...)
+    maven { // Add this line
+      url("$rootDir/../node_modules/detox/Detox-android") // Add this line
+    } // Add this line
+    (...)
+  }
+}
+```
+
+To find the version of kotlin you want to use, run :
+
+Open Android Studio, go to Preferences > Languages & Frameworks > Kotlin and look at Current Kotlin plugin version field.
+
+For example, 212-1.6.10-release-923-AS5457.46 means you have version 1.6.10.
+
+Edit android/app/build.gradle
+
+```js
+android {
+  (...)
+  defaultConfig {
+    (...)
+    testBuildType System.getProperty('testBuildType', 'debug') // Add this line
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' // Add this line
+  }
+  (...)
+
+  buildTypes {
+    release {
+      (...)
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro" // Add this line
+    }
+  }
+  (...)
+  dependencies {
+    (...)
+    androidTestImplementation('com.wix:detox:+') // Add this line
+    implementation 'androidx.appcompat:appcompat:1.1.0' // Add this line
+    (...)
+  }
+  (...)
+}
+```
+
+##### Auxiliary Android test
+
+Create android/app/src/androidTest/java/com/(your.package)/DetoxTest.java
+
+And add the following code, your package name is the name of your app in lowercase, you can find it in package.json in the name key.
+
+Or you could copy and paste the first line from android/app/src/main/java/com/(your.package)/MainActivity.java.
+
+```java
+package com.<your.package>; // Change this
+
+import com.wix.detox.Detox;
+import com.wix.detox.config.DetoxConfig;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class DetoxTest {
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class, false, false);
+
+    @Test
+    public void runDetoxTests() {
+        DetoxConfig detoxConfig = new DetoxConfig();
+        detoxConfig.idlePolicyConfig.masterTimeoutSec = 90;
+        detoxConfig.idlePolicyConfig.idleResourceTimeoutSec = 60;
+        detoxConfig.rnContextLoadTimeoutSec = (BuildConfig.DEBUG ? 180 : 60);
+
+        Detox.runTests(mActivityRule, detoxConfig);
+    }
+}
+```
+
+##### Enabling unencrypted traffic for Detox
+
+Create or edit the file android/app/src/main/res/xml/network_security_config.xml
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+</network-security-config>
+```
+
+Edit android/app/src/main/AndroidManifest.xml
+
+```xml
+<manifest>
+  <application
+    (...)
+    android:networkSecurityConfig="@xml/network_security_config">
+  </application>
+</manifest>
+```
+
+#### 4. Build the app for detox to test it
+
+Android debug :
+
+```bash
+detox build --configuration android.emu.debug
+```
+
+Android release :
+
+```bash
+detox build --configuration android.emu.release
+```
+
+iOS debug :
+
+```bash
+detox build --configuration ios.sim.debug
+```
+
+iOS release :
+
+```bash
+detox build --configuration ios.sim.release
+```
+
+#### 5. Launch the test
+
+```bash
+ detox test --configuration android.emu.debug
+```
+
+```bash
+ detox test --configuration ios.sim.debug
 ```
 
 ## Troubelshooting
