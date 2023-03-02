@@ -37,6 +37,8 @@ ReactNativeCliBoilerplate => MyAwesomeApp
 ### d. Reinstall pods
 
 ```bash
+bundle install
+
 npx pod-install
 
 watchman watch-del-all
@@ -51,9 +53,9 @@ yarn install
 ## 4. Install ios dependencies
 
 ```bash
-cd ios
 bundle install
-pod install
+
+npx pod-install
 ```
 
 # To develop a new component
@@ -889,6 +891,34 @@ detox build --configuration ios.sim.release
 
 ```bash
  detox test --configuration ios.sim.debug
+```
+
+## 6. React Navigation
+
+### 6.1. Installation
+
+```bash
+yarn add @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context
+```
+
+```bash
+npx pod-install
+```
+
+Edit MainActivity.java file which is located in android/app/src/main/java/(your package name)/MainActivity.java
+
+```java
+import android.os.Bundle;
+
+public class MainActivity extends ReactActivity {
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
+  }
+  
+  (...)
+}
 ```
 
 ## Troubelshooting
