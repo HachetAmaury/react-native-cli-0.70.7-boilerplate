@@ -10,7 +10,7 @@ module.exports = {
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,
-        inlineRequires: true,
+        inlineRequires: false, // to prevent Maximum call stack size exceeded error with storybook
       },
     }),
   },
