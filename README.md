@@ -57,8 +57,11 @@ watchman watch-del-all
 ### b. Add the remote to your local repo
 
 ```bash
+git remote remove origin
 git remote add origin <Your repo>
 git branch -M main
+git add .
+git commit -m "Initial commit"
 git push -u origin main
 ```
 
