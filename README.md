@@ -34,7 +34,13 @@ package com.reactnativecliboilerplate; => package com.myawesomeapp;
 ReactNativeCliBoilerplate => MyAwesomeApp
 ```
 
-### d. Reinstall pods
+### d. Install dependencies
+
+```bash
+yarn install
+```
+
+### e. Install pods
 
 ```bash
 bundle install
@@ -44,18 +50,16 @@ npx pod-install
 watchman watch-del-all
 ```
 
-## 3. Install dependencies
+## 3. Link the project to you git repo
+
+### a. Create a new repo on github
+
+### b. Add the remote to your local repo
 
 ```bash
-yarn install
-```
-
-## 4. Install ios dependencies
-
-```bash
-bundle install
-
-npx pod-install
+git remote add origin <Your repo>
+git branch -M main
+git push -u origin main
 ```
 
 # To develop a new component
@@ -916,7 +920,7 @@ public class MainActivity extends ReactActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(null);
   }
-  
+
   (...)
 }
 ```
